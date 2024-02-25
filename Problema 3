@@ -32,7 +32,7 @@ int colaVacia(Cola *cola) {
 }
 
 void encolar(Cola *cola, Automovil nuevoAuto) {
-    Nodo *nuevo = (Nodo *) malloc(sizeof(Nodo));
+    Nodo *nuevo = (Nodo *)malloc(sizeof(Nodo));
     if (nuevo == NULL) {
         printf("Error: no se pudo asignar memoria\n");
         exit(EXIT_FAILURE);
@@ -83,13 +83,17 @@ Automovil ultimo(Cola *cola) {
     }
 }
 
+void imprimirAuto(Automovil autoObj) {
+    printf("Nombre: %s\n", autoObj.nombre);
+    printf("Placas: %s\n", autoObj.placas);
+    printf("Modelo: %d\n", autoObj.modelo);
+    printf("\n");
+}
+
 void imprimirCola(Cola *cola) {
     Nodo *temp = cola->primero;
     while (temp != NULL) {
-        printf("Nombre: %s\n", temp->auto_obj.nombre);
-        printf("Placas: %s\n", temp->auto_obj.placas);
-        printf("Modelo: %d\n", temp->auto_obj.modelo);
-        printf("\n");
+        imprimirAuto(temp->auto_obj);
         temp = temp->siguiente;
     }
 }
@@ -100,19 +104,60 @@ int main() {
     int opcion;
 
     do {
-        printf("1) Imprimir la cantidad de autos en el estacionamiento\n");
+        printf("\n1) Imprimir la cantidad de autos en el estacionamiento\n");
         printf("2) Imprimir la lista de autos en el estacionamiento en orden\n");
         printf("3) Imprimir el primer auto que ingreso (caracteristicas)\n");
         printf("4) Imprimir el ultimo auto que ingreso (caracteristicas)\n");
-        printf("5) Salir\n");
+        printf("5) Ingresar un nuevo auto al estacionamiento\n");
+        printf("6) Salir\n");
         printf("Ingrese una opcion: ");
         scanf("%d", &opcion);
 
         switch (opcion) {
-            // Add the necessary cases for the menu options
+            case 1:
+                printf("Cantidad de autos en el estacionamiento: %d\n", cola.cantidad);
+                break;
+            case 2:
+                if (colaVacia(&cola)) {
+                    printf("La cola esta vacia. No hay autos en el estacionamiento.\n");
+                } else {
+                    printf("Lista de autos en el estacionamiento:\n");
+                    imprimirCola(&cola);
+                }
+                break;
+            case 3:
+                printf("Primer auto que ingreso:\n");
+                imprimirAuto(primero(&cola));
+                break;
+            case 4:
+                printf("Ultimo auto que ingreso:\n");
+                imprimirAuto(ultimo(&cola));
+                break;
+            case 5:
+                {
+                    Automovil nuevoAuto;
+                    printf("Ingrese el nombre del auto: ");
+                    scanf("%s", nuevoAuto.nombre);
+                    printf("Ingrese las placas del auto: ");
+                    scanf("%s", nuevoAuto.placas);
+                    printf("Ingrese el modelo del auto: ");
+                    scanf("%d", &nuevoAuto.modelo);
+                    encolar(&cola, nuevoAuto);
+                    printf("Auto ingresado al estacionamiento.\n");
+                }
+                break;
+            case 6:
+                printf("Saliendo del programa...\n");
+                break;
+            default:
+                printf("Opcion invalida. Ingrese nuevamente.\n");
         }
 
-    } while (opcion != 5);
+    } while (opcion != 6);
+
+    while (!colaVacia(&cola)) {
+        desencolar(&cola);
+    }
 
     return 0;
 }
