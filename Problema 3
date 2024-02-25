@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_AUTOS 100
+
+typedef struct {
+    char nombre[50];
+    char placas[10];
+    int modelo;
+} Automovil;
+
+typedef struct Nodo {
+    Automovil auto_obj;
+    struct Nodo *siguiente;
+} Nodo;
+
+typedef struct {
+    Nodo *primero;
+    Nodo *ultimo;
+    int cantidad;
+} Cola;
+
+void inicializarCola(Cola *cola) {
+    cola->primero = NULL;
+    cola->ultimo = NULL;
+    cola->cantidad = 0;
+}
+
+int colaVacia(Cola *cola) {
+    return cola->cantidad == 0;
+}
+
+void encolar(Cola *cola, Automovil nuevoAuto) {
+    Nodo *nuevo = (Nodo *) malloc(sizeof(Nodo));
+    if (nuevo == NULL) {
+        printf("Error: no se pudo asignar memoria\n");
+        exit(EXIT_FAILURE);
+    }
+    strcpy(nuevo->auto_obj.nombre, nuevoAuto.nombre);
+    strcpy(nuevo->auto_obj.placas, nuevoAuto.placas);
+    nuevo->auto_obj.modelo = nuevoAuto.modelo;
+    nuevo->siguiente = NULL;
+
+    if (colaVacia(cola)) {
+        cola->primero = nuevo;
+    } else {
+        cola->ultimo->siguiente = nuevo;
+    }
+
+    cola->ultimo = nuevo;
+    cola->cantidad++;
+}
+
+void desencolar(Cola *cola) {
+    if (!colaVacia(cola)) {
+        Nodo *temp = cola->primero;
+        cola->primero = cola->primero->siguiente;
+        free(temp);
+        cola->cantidad--;
+    } else {
+        printf("Error: la cola esta vacia\n");
+    }
+}
+
+Automovil primero(Cola *cola) {
+    Automovil autoVacio = {"", "", 0};
+    if (colaVacia(cola)) {
+        printf("Error: la cola esta vacia\n");
+        return autoVacio;
+    } else {
+        return cola->primero->auto_obj;
+    }
+}
+
+Automovil ultimo(Cola *cola) {
+    Automovil autoVacio = {"", "", 0};
+    if (colaVacia(cola)) {
+        printf("Error: la cola esta vacia\n");
+        return autoVacio;
+    } else {
+        return cola->ultimo->auto_obj;
+    }
+}
+
+void imprimirCola(Cola *cola) {
+    Nodo *temp = cola->primero;
+    while (temp != NULL) {
+        printf("Nombre: %s\n", temp->auto_obj.nombre);
+        printf("Placas: %s\n", temp->auto_obj.placas);
+        printf("Modelo: %d\n", temp->auto_obj.modelo);
+        printf("\n");
+        temp = temp->siguiente;
+    }
+}
+
+int main() {
+    Cola cola;
+    inicializarCola(&cola);
+    int opcion;
+
+    do {
+        printf("1) Imprimir la cantidad de autos en el estacionamiento\n");
+        printf("2) Imprimir la lista de autos en el estacionamiento en orden\n");
+        printf("3) Imprimir el primer auto que ingreso (caracteristicas)\n");
+        printf("4) Imprimir el ultimo auto que ingreso (caracteristicas)\n");
+        printf("5) Salir\n");
+        printf("Ingrese una opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            // Add the necessary cases for the menu options
+        }
+
+    } while (opcion != 5);
+
+    return 0;
+}
